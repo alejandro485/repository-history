@@ -1,8 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { GetBranchesService } from './get-branches/get-branches.service';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
-  }
+
+    constructor(
+        private getBranchesService: GetBranchesService,
+    ) { }
+
+    getRepository() {
+        return {
+            repository_name: process.env.FULLNAME_PATH,
+        };
+    }
+
+    getBranches(query) {
+        return this.getBranchesService.getBranches(query || { });
+    }
+
 }

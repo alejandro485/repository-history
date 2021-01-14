@@ -3,40 +3,40 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class PaginationService {
 
-    paginationCalculation(total: number, items: number, page: number) {
+    paginationCalculation(total: number, limit: number, page: number) {
 
         if (page < 1) {
             page = 1;
         }
 
-        if (items <= 0) {
+        if (limit <= 0) {
             throw new Error('Invalid items per page');
         }
 
-        const pageCount = Math.ceil(total / items);
+        const pageCount = Math.ceil(total / limit);
 
-        let itemsPage = items;
-        const totalBudgeted = page * items;
+        let itemsPage = limit;
+        const totalBudgeted = page * limit;
         if (totalBudgeted > total) {
-            const itemsBudgeted = pageCount * items;
+            const itemsBudgeted = pageCount * limit;
             if (totalBudgeted > itemsBudgeted) {
                 itemsPage = 0;
             } else {
-                itemsPage = total % items;
+                itemsPage = total % limit;
             }
         }
 
-        const beginPage = (page - 1) * items;
-        const endPage = page * items;
+        const beginPage = (page - 1) * limit;
+        const endPage = page * limit;
 
         return {
-            total_items: total,
+            total: total,
             items_page: itemsPage,
-            items_per_page: items,
+            limit,
             total_pages: pageCount,
             current_page: page,
-            begin_page: beginPage,
-            end_page: endPage,
+            begin_items: beginPage,
+            end_items: endPage,
         };
 
     }
