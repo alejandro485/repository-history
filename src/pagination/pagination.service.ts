@@ -4,11 +4,9 @@ import { Injectable } from '@nestjs/common';
 export class PaginationService {
 
     paginationCalculation(total: number, limit: number, page: number) {
-
         if (page < 1) {
             page = 1;
         }
-
         if (limit <= 0) {
             throw new Error('Invalid items per page');
         }

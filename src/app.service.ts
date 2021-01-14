@@ -14,8 +14,8 @@ export class AppService {
         };
     }
 
-    getBranches(query) {
-        return this.getBranchesService.getBranches(query || { });
+    getBranches() {
+        return this.getBranchesService.getBranches();
     }
 
 }

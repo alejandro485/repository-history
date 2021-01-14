@@ -10,37 +10,14 @@ export class GetBranchesService {
         private paginationService: PaginationService,
     ) { }
 
-    public async getBranches(query: any) {
-        let page  = query.page;
-        let limit = query.limit;
+    public async getBranches() {
         const fullname = process.env.FULLNAME_PATH;
-        if (!page || page < 1) {
-            page = 1;
-        }
-        if (!limit || limit < 1) {
-            limit = 10;
-        }
-
-        const queryBranches = {
-            page: page,
-            per_page: limit,
-        };
-        const results = await Promise.all([
-            this.githubBranchesService.countBranchesByFullname(fullname),
-            this.githubBranchesService.getBranchesByFullname(fullname, queryBranches),
-        ]);
-
-        const countResult = results[0];
-        const branchesResult = results[1];
-
+        const branchesResult = await this.githubBranchesService.getBranchesByFullname(fullname, { });
         if (branchesResult.status == false) {
             return branchesResult;
         }
-        let totalBranches = countResult.count;
-        if (countResult.status == false) {
-            totalBranches = branchesResult.branches.length;
-        }
-        const paginationInfo = this.paginationService.paginationCalculation(totalBranches, limit, page);
+        const paginationInfo = this.paginationService.paginationCalculation(
+            branchesResult.branches.length, branchesResult.branches.length || 1, 1);
         paginationInfo['list'] = branchesResult.branches;
         return paginationInfo;
     }

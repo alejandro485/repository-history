@@ -14,7 +14,7 @@ export class AppController {
     }
 
     @Get('branches')
-    getBranches(@Query() query) {
-        return this.appService.getBranches(query);
+    getBranches() {
+        return this.appService.getBranches();
     }
 }
