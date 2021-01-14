@@ -17,4 +17,10 @@ export class AppController {
     getBranches() {
         return this.appService.getBranches();
     }
+
+    @Get('commits')
+    getCommits(@Query() query) {
+        return this.appService.getCommits(query);
+    }
+
 }

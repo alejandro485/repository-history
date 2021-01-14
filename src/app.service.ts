@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { GetBranchesService } from './get-branches/get-branches.service';
+import { GetCommitsService } from './get-commits/get-commits.service';
 
 @Injectable()
 export class AppService {
 
     constructor(
         private getBranchesService: GetBranchesService,
+        private getCommitsService: GetCommitsService,
     ) { }
 
     getRepository() {
@@ -16,6 +18,10 @@ export class AppService {
 
     getBranches() {
         return this.getBranchesService.getBranches();
+    }
+
+    getCommits(query) {
+        return this.getCommitsService.getCommits(query || { });
     }
 
 }
