@@ -30,7 +30,7 @@ export class GithubLinkProcessService {
             }
             let relValue = '';
             for (let i = 1; i<linkParams.length; i++) {
-                const rel = linkParams[i].split('=');
+                const rel = linkParams[i].trim().split('=');
                 if (rel[0] != 'rel') {
                     continue;
                 }

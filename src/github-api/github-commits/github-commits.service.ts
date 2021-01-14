@@ -17,8 +17,6 @@ export class GithubCommitsService {
         try {
             const queryString = Object.keys(query || {}).map(key => key + '=' + query[key]).join('&') + '';
             const result = await githubRequest.get('repos/' + fullName + '/commits?' + queryString);
-            const links = result.headers['Link'];
-            const resources = this.githubLinkProcessService.githubLinkProcess(links);
             const commits = result.data.map(commitItem => {
                 return {
                     sha: commitItem.sha,
@@ -29,7 +27,6 @@ export class GithubCommitsService {
             return {
                 status: true,
                 commits,
-                resources,
             };
         } catch (err) {
             return {
@@ -47,12 +44,16 @@ export class GithubCommitsService {
     public async countCommitsByFullname(fullName: string) {
         try {
             const result = await githubRequest.get('repos/' + fullName + '/commits?per_page=1');
-            const links = result.headers['Link'];
-            const resources = this.githubLinkProcessService.githubLinkProcess(links);
-            const lastResource = resources.find(rc => rc.rel == 'last');
+            const links = result.headers['Link'] || result.headers['link'];
+            let count = 1;
+            if (links) {
+                const resources = this.githubLinkProcessService.githubLinkProcess(links);
+                const lastResource = resources.find(rc => rc.rel == 'last');
+                count = parseInt(lastResource.params.page, 10);
+            }
             return {
                 status: true,
-                count: parseInt(lastResource.params.page, 10),
+                count,
             }
         } catch (err) {
             return {

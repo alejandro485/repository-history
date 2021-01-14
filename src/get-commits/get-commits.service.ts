@@ -25,8 +25,10 @@ export class GetCommitsService {
         const queryCommits = {
             page,
             per_page: limit,
-            sha: branch,
         };
+        if (branch) {
+            queryCommits['sha'] = branch;
+        }
         const results = await Promise.all([
             this.githubCommitsService.countCommitsByFullname(fullname),
             this.githubCommitsService.getCommitsByFullname(fullname, queryCommits),
