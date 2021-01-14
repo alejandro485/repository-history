@@ -1,75 +1,78 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Proyecto de Interaccion con Api de Github
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Descripcion
 
-## Description
+Este proyecto de prueba fue realizado con el framework de NodeJS [NestJS](https://nestjs.com/) enfocado en desarrollo de aplicaciones backend y apoyado en TypeScript. La estructura del proyecto comparte similitudes con la organización y la sintaxis de Angular, pero con ligeras variaciones propias del framework.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Installacion de dependencias
 
-## Installation
+Fuera de las dependencias de NestJS se usaron las librerias Axios y Dotenv, la primera para una manipulacion mas sencilla de las peticiones http y la segunda para el manejo de las variables de entorno.
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+## Compilación de la aplicación
 
 ```bash
-# development
+$ npm run build
+```
+
+## Ejecución de la aplicación
+
+Antes de ejecutar la aplicación es necesario crear el archivo **.env** el cual contiene las diferentes variables de entorno del proyecto. El contenido del archivo es el siguiente:
+
+```
+NODE_ENV=production
+PORT=8080
+GITHUB_API=https://api.github.com
+FULLNAME_PATH=alejnadro485/repository-history
+```
+Es importante crear el archivo y ubicar el contenido pertinente debido a que el archivo esta ignorado en el repositorio pero su contenido es necesario para la ejecución de la aplicación.
+
+A continuación están las diferentes formas de ejecución, algunas no dependen de una compilación previa pero sí es necesaria para la ejecución en producción.
+
+```bash
+# producción
 $ npm run start
 
 # watch mode
 $ npm run start:dev
 
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+## Pruebas
 
-```bash
-# unit tests
-$ npm run test
+Las pruebas a los diferentes endpoints de la aplicación estan guardados en Postman y son accesibles mediante la siguiente [documentación](https://documenter.getpostman.com/view/685299/TVzUEc9e), donde estan los 3 endpoins de la aplicacion y un ejemplo del retorno de cada uno.
 
-# e2e tests
-$ npm run test:e2e
+La URL de cada enpoint tiene una variable de entorno de Postman llamada **REPOSITORY_HISTORY** que para una ejecucion en local su valor es: localhost:8080.
 
-# test coverage
-$ npm run test:cov
+La peticion **/commits** permite 3 parametros por consulta:
+- limit: total de elementos a traer por consulta, su valor permite calcular la distribución de paginas por consulta. Por defecto su valor es 10.
+- page: pagina de elementos a consultar, por defecto 1.
+- branch: rama sobre la cual se quiere consultar commits.
+
+Es importante resaltar que cada enpoint tiene en su respuesta una estructura de paginacion definida, la cual es:
+
+```javascript
+{
+    "total": 5,
+    "items_page": 5,
+    "limit": 10,
+    "total_pages": 1,
+    "current_page": 1,
+    "begin_items": 0,
+    "end_items": 10,
+    "list": [...]
+}
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
+Donde
+- total: total de elementos existente
+- items_page: total de elementos traidos en la consulta
+- limit: maximo de elementos a traer por apgina de consulta
+- total_pages: total de paginas consultables
+- current_page: pagina actual consultada en la petición
+- begin_items: indice del primer elemento traído en la consulta
+- end_items: indice del ultimo elemento traído en la consulta
+- list: lista de elementos

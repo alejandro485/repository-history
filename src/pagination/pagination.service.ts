@@ -24,7 +24,7 @@ export class PaginationService {
             }
         }
 
-        const beginPage = (page - 1) * limit;
+        const beginPage = ((page - 1) * limit) + 1;
         const endPage = page * limit;
 
         return {
